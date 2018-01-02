@@ -211,4 +211,121 @@ class C_khach_hang
             echo "Message sent!";
         }
     }
+
+    public function noi_dung_gui_mail($hoadon)
+    {
+        $noi_dung='
+        <table align="center" cellspacing="10px" border="0" style="border:1px solid #00F;" width="90%">
+            <tr>
+                <td style="padding-left:20px">Mã khách hàng</td>
+                <td width="250px">'.$hoadon[0]['idkhach_hang'].'</td>
+                <td>Tên khách hàng</td>
+                <td>'.$hoadon[0]['ten_khach_hang'].'</td>
+            </tr>
+                <tr>
+                <td style="padding-left:20px">Địa chỉ</td>
+                <td>'.$hoadon[0]['dia_chi'].'</td>
+                <td>Điện thoại</td>
+                <td>'.$hoadon[0]['dien_thoai'].'</td>
+            </tr>
+                <tr>
+                <td style="padding-left:20px">Số hóa đơn</td>
+                <td>'.$hoadon[0]['idhoa_don'].'</td>
+                <td>Ngày đặt</td>
+                <td>'.$hoadon[0]['ngay_dat'].'</td>
+            </tr>
+            <tr>
+            <td colspan="4">
+                <table align="center" cellspacing="10px" border="0" width="100%">
+                    <tr bgcolor="#999999"><td>STT</td><td>Mã sản phẩm</td><td>Tên sản phẩm</td><td>Đơn giá</td><td>Số lượng</td><td>Thành thiền</td></tr>';
+            $i=1;$tt=0;
+            foreach($hoadon as $item)
+            {
+                $noi_dung.='<tr>';
+                $noi_dung.= '<td>'.$i.'</td>';
+                $noi_dung.= '<td>'.$item['idxe'].'</td>';
+                $noi_dung.= '<td>'.$item['ten'].'</td>';
+                $noi_dung.= '<td>'.$item['don_gia'].'</td>';
+                $noi_dung.= '<td>'.$item['so_luong'].'</td>';
+                $noi_dung.= '<td>'.number_format($item['don_gia']*$item['so_luong']).'</td>';
+                $noi_dung.='</tr>';
+                $tt=$tt+$item['so_luong']*$item['don_gia'];
+                $i++;
+            }
+            $noi_dung.='<tr><td colspan="5">Tổng trị giá hóa đơn</td><td>'.number_format($tt).'</td></tr>';    
+          $noi_dung.='</table>        
+            </td>
+            </tr>
+        </table>        
+        ';
+        return $noi_dung;
+    }
+	public function DangKy()
+	{
+		$dataKhachHang=array('ten_khach_hang'=>'', 'phai'=>0, 'email'=>'', 'dia_chi'=>'', 'dien_thoai'=>'', 'ghi_chu'=>'', 'ten_dang_nhap'=>'', 'mat_khau'=>'');
+		$dataErr=array('ten_khach_hang'=>'', 'phai'=>0, 'email'=>'', 'dia_chi'=>'', 'dien_thoai'=>'', 'ghi_chu'=>'', 'ten_dang_nhap'=>'', 'mat_khau'=>'');
+		if(isset($_POST['dangky']))
+		{
+			$dataKhachHang=array(
+				'ten_khach_hang'=>$_POST['ten_khach_hang'],
+				'phai'=>$_POST['phai'], 
+				'email'=>$_POST['email'], 
+				'dia_chi'=>$_POST['dia_chi'], 
+				'dien_thoai'=>$_POST['dien_thoai'], 
+				'ghi_chu'=>$_POST['ghi_chu'], 
+				'ten_dang_nhap'=>$_POST['ten_dang_nhap'], 
+				'mat_khau'=>$_POST['mat_khau']
+				);
+			$res=1;
+			$dataErr=$this->KiemTraDuLieu($dataKhachHang,$res);
+			if($res==1)
+			{
+				$m_khach_hang = new M_khach_hang();
+				$res=$m_khach_hang->ThemKhachHang($dataKhachHang);
+				if($res)
+					header('location:'.path.'khach-hang/dat-hang.html');
+				else
+					$dataErr['mss']='Thêm không thành công';
+			}
+		}
+		$smarty=new Smarty_ung_dung();
+		$smarty->assign('data',$dataKhachHang);
+		$smarty->assign('dataErr',$dataErr);
+		$smarty->display('khach_hang/v_dang_ky.tpl');
+	}
+	public function KiemTraDuLieu($data, &$res)	
+	{
+		$dataErr=array('ten_khach_hang'=>'', 'phai'=>0, 'email'=>'', 'dia_chi'=>'', 'dien_thoai'=>'', 'ghi_chu'=>'', 'ten_dang_nhap'=>'', 'mat_khau'=>'');
+		if(empty($data['ten_khach_hang']))
+		{
+			$res=0;
+			$dataErr['ten_khach_hang']='*';
+		}
+		if(empty($data['email']))
+		{
+			$res=0;
+			$dataErr['email']='*';
+		}
+		if(empty($data['dia_chi']))
+		{
+			$res=0;
+			$dataErr['dia_chi']='*';
+		}
+		if(empty($data['dien_thoai']))
+		{
+			$res=0;
+			$dataErr['dien_thoai']='*';
+		}
+		if(empty($data['ten_dang_nhap']))
+		{
+			$res=0;
+			$dataErr['ten_dang_nhap']='*';
+		}
+		if(empty($data['mat_khau']))
+		{
+			$res=0;
+			$dataErr['mat_khau']='*';
+		}
+		return $dataErr;
+	}
 }
