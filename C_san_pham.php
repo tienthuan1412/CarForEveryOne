@@ -84,6 +84,139 @@ class C_san_pham
 		$smarty->assign('LinkPage', $LinkPage);
 		$smarty->display('san_pham/v_doc_ds_san_pham_theo_loai.tpl');		
 	}
+	public function DSSanPhamnAdmin()
+	{
+		$m_san_pham = new M_san_pham();
+		$pager=new Pager();
+		$limit=8;
+		$start=$pager->findStart($limit);
+		$count=$m_san_pham->TongSoSanPham();
+		$numPage=$pager->findPages($count, $limit);
+		$DSSanPham=$m_san_pham->getDSSanPhamPhanTrang($start,$limit);
+		//var_dump($DSMonAn);
+		$LinkPage=$pager->pageList_admin($_GET['page'], $numPage);
+		//echo $LinkPage;
+		$smarty=new Smarty_ung_dung();
+		
+		$smarty->assign('DSSanPham',$DSSanPham);
+		$smarty->assign('LinkPage',$LinkPage);
+
+		$smarty->display('san_pham/v_doc_ds_san_pham_admin.tpl');
+	}
+	public function ThemSanPham()
+	{
+		$smarty=new Smarty_ung_dung();
+		$dataSanPham=array(
+			'idhang_xe'=>'', 'ten_xe'=>'', 'ten_xe_url'=>'', 'noi_dung_tom_tat'=>'', 'noi_dung_chi_tiet'=>'', 'don_gia'=>'', 'gia_khuyen_mai'=>'', 'khuyen_mai'=>'', 'hinh'=>'', 'ngay_cap_nhat'=>'', 'dvt'=>'',    'video'=>'','status'=>0
+		);
+		if(isset($_POST['btnThem']))
+		{
+			$dataSanPham=array(
+				'idhang_xe'=>$_POST['idhang_xe'], 
+				'ten_xe'=>$_POST['ten_xe'], 
+				'ten_xe_url'=>$_POST['ten_xe_url'], 
+				'noi_dung_tom_tat'=>$_POST['noi_dung_tom_tat'], 
+				'noi_dung_chi_tiet'=>$_POST['noi_dung_chi_tiet'], 
+				'don_gia'=>$_POST['don_gia'], 
+				'gia_khuyen_mai'=>$_POST['gia_khuyen_mai'], 
+				'khuyen_mai'=>$_POST['khuyen_mai'], 
+				'hinh'=>$_POST['hinh'], 
+				'ngay_cap_nhat'=>$_POST['ngay_cap_nhat'], 
+				'dvt'=>$_POST['dvt'], 
+				'video'=>'',
+				'status'=>isset($_POST['status'])?1:0,
+			);
+			$kiemtra=$this->KiemTraDuLieu($dataSanPham);
+			if(empty($kiemtra))
+			{
+				//kiem tra hinh anh
+				$hinh=$_FILES['hinh'];
+				if($hinh['error']==0)
+				{
+					$arrType=array('image/jpeg','image/jpg','image/png');
+					if(array_search($hinh['type'], $arrType)!==false)
+					{
+						if($hinh['size']<200000000000)
+						{
+							$name=time().$hinh['name'];
+							move_uploaded_file($hinh['tmp_name'], './public/admin/images/'.$name);
+							$dataSanPham['hinh']=$name;
+							$m_san_pham=new M_san_pham();
+							$m_san_pham->ThemSanPham($dataSanPham);
+							header('location:'.path.'quan-tri/san-pham/danh-sach-san-pham.html');
+						}
+						else
+							$smarty->assign('err','Chỉ chọn hình <2MB');		
+					}
+					else
+						$smarty->assign('err','Chỉ chọn file hình');	
+				}
+				else
+					$smarty->assign('err','Phải chọn hình ảnh');
+			}
+			else
+				$smarty->assign('err',$kiemtra);
+
+		}
+		$m_loai_san_pham=new M_loai_san_pham();
+		$smarty->assign('DSLoaiSanPham',$m_loai_san_pham->DSLoaiSanPham());
+		$smarty->assign('data',$dataSanPham);
+		$smarty->display('san_pham/v_them_san_pham.tpl');
+	}
+
+
+	public function ThemHangXe()
+	{
+		$smarty=new Smarty_ung_dung();
+		$dataSanPham=array(
+			'ten_hang'=>'', 'ten_hang_url'=>'', 'mo_ta'=>'','hinh'=>'','status'=>0);
+		if(isset($_POST['btnThemLoai']))
+		{
+			$dataSanPham=array(
+
+				'ten_hang'=>$_POST['ten_hang'], 
+				'ten_hang_url'=>$_POST['ten_hang_url'], 
+				'mo_ta'=>$_POST['mo_ta'],  
+				'hinh'=>'',
+				'status'=>isset($_POST['status'])?1:0
+			);
+			$kiemtra=$this->KiemTraDuLieuHangXe($dataSanPham);
+			if(empty($kiemtra))
+			{
+				//kiem tra hinh anh
+				$hinh=$_FILES['hinh'];
+				if($hinh['error']==0)
+				{
+					$arrType=array('image/jpeg','image/jpg','image/png');
+					if(array_search($hinh['type'], $arrType)!==false)
+					{
+						if($hinh['size']<200000000000)
+						{
+							$name=time().$hinh['name'];
+							move_uploaded_file($hinh['tmp_name'], './public/admin/images/'.$name);
+							$dataSanPham['hinh']=$name;
+							$m_san_pham=new M_san_pham();
+							$m_san_pham->ThemHangXe($dataSanPham);
+							header('location:'.path.'quan-tri/san-pham/danh-sach-hang-xe.html');
+						}
+						else
+							$smarty->assign('err','Chỉ chọn hình <2MB');		
+					}
+					else
+						$smarty->assign('err','Chỉ chọn file hình');	
+				}
+				else
+					$smarty->assign('err','Phải chọn hình ảnh');
+			}
+			else
+				$smarty->assign('err',$kiemtra);
+
+		}
+		$m_loai_san_pham=new M_loai_san_pham();
+		$smarty->assign('DSLoaiSanPham',$m_loai_san_pham->DSLoaiSanPham());
+		$smarty->assign('data',$dataSanPham);
+		$smarty->display('san_pham/v_them_loai_xe.tpl');
+	}
 
 }
 ?>
