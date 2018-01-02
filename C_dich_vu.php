@@ -51,4 +51,38 @@ class C_dich_vu
 		$smarty->assign('dataErr',$dataErr);
 		$smarty->display('dich_vu/v_lien_he.tpl');
 	}
+	public function KiemTraDuLieu($data, &$res)	
+	{
+		$dataErr=array('ten'=>'', 'email'=>'', 'tieu_de'=>'', 'noi_dung'=>'');
+		if(empty($data['ten']))
+		{
+			$res=0;
+			$dataErr['ten']='*';
+		}
+		if(empty($data['email']))
+		{
+			$res=0;
+			$dataErr['email']='*';
+		}
+		if(empty($data['tieu_de']))
+		{
+			$res=0;
+			$dataErr['tieu_de']='*';
+		}
+		if(empty($data['noi_dung']))
+		{
+			$res=0;
+			$dataErr['noi_dung']='*';
+		}
+		return $dataErr;
+	}
+	public function DSLienHe()
+	{
+		$smarty=new Smarty_ung_dung();
+		$m_lien_he=new M_lien_he();
+		$DSLienHe=$m_lien_he->getDSLienHe();
+		$smarty->assign('DSLienHe',$DSLienHe);
+		//die(var_dump($DSLienHe));
+		$smarty->display('dich_vu/v_doc_ds_lien_he.tpl');
+	}
 }
