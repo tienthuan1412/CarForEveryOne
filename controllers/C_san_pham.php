@@ -159,8 +159,8 @@ class C_san_pham
 
 		}
 		$m_loai_san_pham=new M_loai_san_pham();
-		$smarty->assign('DSLoaiSanPham',$m_loai_san_pham->DSLoaiSanPham());
-		$smarty->assign('data',$dataSanPham);
+		$smarty->assign('DS_loai_san_pham',$m_loai_san_pham->DSLoaiSanPham());
+		$smarty->assign('data1',$dataSanPham);
 		$smarty->display('san_pham/v_them_san_pham.tpl');
 	}
 
