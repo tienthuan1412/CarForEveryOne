@@ -328,4 +328,20 @@ class C_khach_hang
 		}
 		return $dataErr;
 	}
+
+	public function DonHangMoi()
+	{
+		$smarty= new Smarty_ung_dung();
+		$m_don_dat_hang=new M_don_dat_hang();
+		echo $m_don_dat_hang->SoDonDatHangMoi();
+	}
+	public function ThongTinKhachHang()
+	{
+		$smarty=new Smarty_ung_dung();
+		if(!isset($_SESSION['ma_khach_hang']))
+		{
+			header('location:'.path.'khach-hang/dang-ky.html');   
+		}
+		$smarty->display('khach_hang/v_thong_tin_khach_hang.tpl');
+	}
 }
