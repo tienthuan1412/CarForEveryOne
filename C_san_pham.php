@@ -370,6 +370,43 @@ class C_san_pham
 		$smarty->assign('data',$dataSanPham);
 		$smarty->display('san_pham/v_cap_nhat_san_pham.tpl');
 	}
+	public function TrangThai()
+	{
+		$idxe=$_POST['id'];
+		$m_san_pham= new M_san_pham();
+		$data=$m_san_pham->getXe($idxe);
+		if($data['status']==1)
+			$status=0;
+		else
+			$status=1;
+		
+		$dataSP=array(
+			'idxe'=>$data['idxe'], 'idhang_xe'=>$data['idhang_xe'], 'ten_xe'=>$data['ten_xe'], 'ten_xe_url'=>$data['ten_xe_url'], 'noi_dung_tom_tat'=>$data['noi_dung_tom_tat'], 'noi_dung_chi_tiet'=>$data['noi_dung_chi_tiet'], 'don_gia'=>$data['don_gia'], 'gia_khuyen_mai'=>$data['gia_khuyen_mai'], 'khuyen_mai'=>$data['khuyen_mai'], 'hinh'=>$data['hinh'], 'ngay_cap_nhat'=>$data['ngay_cap_nhat'], 'dvt'=>$data['dvt'], 'video'=>$data['video'], 'status'=> $status
+		);
+		$m_san_pham->CapNhatSanPham($dataSP);
+		
+		echo $status;
+
+	}
+	public function TrangThaiHangXe()
+	{
+		$idhang_xe=$_POST['id'];
+		$m_san_pham= new M_san_pham();
+		
+		$data=$m_san_pham->getHangXe($idhang_xe);
+		if($data['status']==1)
+			$status=0;
+		else
+			$status=1;
+		
+		$dataSP=array(
+			'idhang_xe'=>$data['idhang_xe'], 'ten_hang'=>$data['ten_hang'], 'ten_hang_url'=>$data['ten_hang_url'], 'mo_ta'=>$data['mo_ta'], 'hinh'=>$data['hinh'], 'status'=>$status
+		);
+		$m_san_pham->CapNhatHangXe($dataSP);
+		
+		echo $status;
+
+	}
 
 }
 ?>
