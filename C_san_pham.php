@@ -217,6 +217,60 @@ class C_san_pham
 		$smarty->assign('data',$dataSanPham);
 		$smarty->display('san_pham/v_them_loai_xe.tpl');
 	}
+	public function KiemTraDuLieuHangXe($data)
+	{
+		$ketqua='';
+		if(empty($data['ten_hang']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(empty($data['ten_hang_url']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(empty($data['mo_ta']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+	}
+	public function CapNhatHangXe()
+	{
+		
+		$idhang_xe=$_GET['id'];
+		$smarty=new Smarty_ung_dung();
+		$m_san_pham= new M_san_pham();
+		$data=$m_san_pham->getHangXe($idhang_xe);
+		$dataND=array(
+			'ten_hang'=>$data['ten_hang'], 'ten_hang_url'=>$data['ten_hang_url'], 'mo_ta'=>$data['mo_ta'], 'hinh'=>$data['hinh'], 'status'=>$data['status']
+		);
+		if(isset($_POST['btnCapNhat']))
+		{
+			$dataND=array(
+				'idhang_xe'=>$data['idhang_xe'], 
+				'ten_hang'=>$_POST['ten_hang'], 
+				'ten_hang_url'=>$_POST['ten_hang_url'], 
+				'mo_ta'=>$_POST['mo_ta'],
+				'status'=>isset($_POST['status'])?1:0,		);
+			$kiemtra=$this->KiemTraDuLieuHangXe($dataND);
+			if(empty($kiemtra))
+			{
+				
+				$m_san_pham=new M_san_pham();
+				$m_san_pham->CapNhatHangXe($dataND);
+				header('location:'.path.'quan-tri/san-pham/danh-sach-hang-xe.html');	
+			}
+			else
+				$smarty->assign('err',$kiemtra);
+
+		}
+		
+		
+		$smarty->assign('data',$dataND);
+		$smarty->display('san_pham/v_cap_nhat_hang_xe.tpl');
+	}
 
 }
 ?>
