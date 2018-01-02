@@ -121,4 +121,94 @@ class C_khach_hang
 		$gio_hang->HuyGioHang();
 		header('location:'.path.'khach-hang/thong-tin-gio-hang.html');
 	}
+
+	public function DangNhap()
+	{	
+
+		$smarty=new Smarty_ung_dung();
+		$smarty->assign('ten_dang_nhap','');
+		if(isset($_POST['submit']))
+		{
+			$ten_dang_nhap=$_POST['ten_dang_nhap'];
+			$mat_khau=$_POST['mat_khau'];
+			if(!empty($ten_dang_nhap) && !empty($mat_khau))
+			{
+				$m_khach_hang = new M_khach_hang();
+				$khach_hang=$m_khach_hang->KhachHangDangNhap($ten_dang_nhap,$mat_khau);
+				if($khach_hang)
+				{
+					$gio_hang=new Gio_hang();
+
+					$SOHD=$m_khach_hang->ThemDonDatHang(array('idkhach_hang'=>$khach_hang['idkhach_hang'], 'ngay_dat'=>date('Y-m-d'), 'tong_tien'=>$gio_hang->TongSoTien(), 'tien_dat_coc'=>0, 'con_lai'=>$gio_hang->TongSoTien(), 'hinh_thuc_thanh_toan'=>1,'status'=>0, 'ghi_chu'=>''));
+					
+					$ttGH=$gio_hang->ThongTinGioHang();
+					foreach ($ttGH as $masanpham => $TT) {
+						
+								$dataChiTiet=array('idhoa_don'=>$SOHD, 'idxe'=>$masanpham , 'so_luong'=>$TT[1], 'don_gia'=>$TT[0], 'san_pham_bst'=>0);
+
+								$m_khach_hang->ThemChiTietHoaDon($dataChiTiet);													
+					}
+					$gio_hang->HuyGioHang();
+					header('location:'.path.'khach-hang/thong-tin-don-dat-hang/'.$SOHD);
+				}
+				else
+					$smarty->assign('err','Đăng nhập không thành công');
+			}
+			else
+			{
+				$smarty->assign('ten_dang_nhap',$ten_dang_nhap);
+				$smarty->assign('err','Vui lòng nhập thông tin đầy đủ');
+			}
+		}
+		$smarty->display('khach_hang/v_dang_nhap.tpl');
+	}
+	public function ThongTinDonDatHang()
+	{
+		if(isset($_GET['id']))
+		{
+			$id=$_GET['id'];
+			$m_khach_hang = new M_khach_hang();
+			$DonDatHang=$m_khach_hang->DonDatHang($id);
+			if(!$DonDatHang)
+				header('location:'.path);
+			$smarty=new Smarty_ung_dung();
+			$smarty->assign('DonDatHang',$DonDatHang);
+			$smarty->display('khach_hang/v_thong_tin_don_dat_hang.tpl');
+			$this->guiMail($DonDatHang);
+			$this->GuiSMS($DonDatHang);
+						
+		}
+		else
+			header('location:'.path);
+	}
+	public function guiMail($HoaDon)
+    {
+        require 'library/PHPMailer/PHPMailerAutoload.php';       
+        $mail = new PHPMailer;      
+        $mail->isSMTP();
+        //Enable SMTP debugging
+        // 0 = off (for production use)
+        // 1 = client messages
+        // 2 = client and server messages
+        $mail->SMTPDebug = 2;        
+        $mail->Debugoutput = 'html';     
+        $mail->SMTPSecure='ssl';  
+        
+        $mail->Host = "smtp.gmail.com";
+        $mail->Port = 465;        
+        $mail->SMTPAuth = true; 
+        $mail->CharSet="utf-8";       
+        $mail->Username = "truongcongminh96@gmail.com";        
+        $mail->Password = "minhdeptrai96";        
+        $mail->setFrom('truongcongminh96@gmail.com', 'Showroom');                       
+        $mail->addAddress($HoaDon[0]['email'], $HoaDon[0]['ten_khach_hang']);       
+        $mail->Subject = 'Thông tin đơn đặt hàng';                       
+        $mail->msgHTML($this->noi_dung_gui_mail($HoaDon)); 
+          
+        if (!$mail->send()) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+        } else {
+            echo "Message sent!";
+        }
+    }
 }
