@@ -1,0 +1,59 @@
+RewriteEngine On
+RewriteRule ^(.*) - [E=BASE:%1]
+RewriteRule ^index.php ./san_pham.php?key=index
+
+RewriteRule ^san-pham/danh-sach-san-pham/([0-9_-]+) ./san_pham.php?key=danh-sach-san-pham&page=$1
+RewriteRule ^san-pham/danh-sach-san-pham$ ./san_pham.php?key=danh-sach-san-pham
+RewriteRule ^san-pham/([a-z0-9_-]+).html ./san_pham.php?key=ds-san-pham-loai-cha&id=$1
+RewriteRule ^san-pham/ct/([a-z0-9_-]+).html ./san_pham.php?key=ct-san-pham&id=$1
+RewriteRule ^index.html ./nguoi_dung.php?key=quan-tri
+RewriteRule ^quan-tri.html ./nguoi_dung.php?key=quan-tri
+
+RewriteRule ^quan-tri/nguoi-dung/dang-nhap.html ./nguoi_dung.php?key=dang-nhap
+RewriteRule ^quan-tri/nguoi-dung/dang-xuat.html ./nguoi_dung.php?key=dang-xuat
+RewriteRule ^quan-tri/nguoi-dung/lock-screen.html ./nguoi_dung.php?key=lock-screen
+RewriteRule ^quan-tri/nguoi-dung/danh-sach-nguoi-dung.html ./nguoi_dung.php?key=ds-nguoi-dung
+RewriteRule ^quan-tri/nguoi-dung/trang-thai.html ./nguoi_dung.php?key=trang-thai
+RewriteRule ^quan-tri/nguoi-dung/cap-nhat-nguoi-dung/([0-9_-]+) ./nguoi_dung.php?key=cap-nhat-nguoi-dung&id=$1
+RewriteRule ^quan-tri/nguoi-dung/them-nguoi-dung.html ./nguoi_dung.php?key=them-nguoi-dung
+
+RewriteRule ^quan-tri/phu-kien/danh-sach-phu-kien.html$ ./phu_kien.php?key=ds-phu-kien-admin
+RewriteRule ^quan-tri/phu-kien/cap-nhat-phu-kien/([0-9_-]+) ./phu_kien.php?key=cap-nhat-phu-kien&id=$1
+RewriteRule ^quan-tri/phu-kien/them-phu-kien.html ./phu_kien.php?key=them-phu-kien
+
+RewriteRule ^quan-tri/san-pham/danh-sach-san-pham.html$ ./san_pham.php?key=ds-san-pham-admin
+RewriteRule ^quan-tri/san-pham/danh-sach-hang-xe.html ./san_pham.php?key=ds-hang-xe-admin
+RewriteRule ^quan-tri/san-pham/them-hang-xe.html ./san_pham.php?key=them-hang-xe
+RewriteRule ^quan-tri/san-pham/cap-nhat-hang-xe/([0-9_-]+) ./san_pham.php?key=cap-nhat-hang-xe&id=$1
+RewriteRule ^quan-tri/san-pham/cap-nhat-san-pham/([0-9_-]+) ./san_pham.php?key=cap-nhat-san-pham&id=$1
+RewriteRule ^quan-tri/san-pham/danh-sach-san-pham/([0-9_-]+) ./san_pham.php?key=ds-san-pham-admin&page=$1
+RewriteRule ^quan-tri/san-pham/them-san-pham.html ./san_pham.php?key=them-san-pham
+RewriteRule ^quan-tri/san-pham/trang-thai.html ./san_pham.php?key=trang-thai
+RewriteRule ^quan-tri/hang-xe/trang-thai.html ./san_pham.php?key=trang-thai-hang-xe
+
+RewriteRule ^khach-hang/them-san-pham.html ./khach_hang.php?key=them-mat-hang
+RewriteRule ^khach-hang/them-bo-suu-tap.html ./khach_hang.php?key=them-bo-suu-tap
+RewriteRule ^khach-hang/thong-tin-gio-hang.html ./khach_hang.php?key=thong-tin-gio-hang
+RewriteRule ^khach-hang/huy-gio-hang.html ./khach_hang.php?key=huy-gio-hang
+RewriteRule ^khach-hang/dat-hang.html ./khach_hang.php?key=dat-hang
+RewriteRule ^khach-hang/dang-ky.html ./khach_hang.php?key=khach-hang-dang-ky
+RewriteRule ^khach-hang/thong-tin-don-dat-hang/([0-9]+) ./khach_hang.php?key=thong-tin-don-dat-hang&id=$1
+
+RewriteRule ^tin-tuc/ct/([a-z0-9_-]+).html ./tin_tuc.php?key=ct-tin-tuc&id=$1
+RewriteRule ^tin-tuc/danh-sach-tin-tuc.html ./tin_tuc.php?key=danh-sach-tin-tuc
+
+RewriteRule ^quan-tri/thong-ke/thong-ke-thang.html ./thong_ke.php?key=thong-ke-thang
+RewriteRule ^quan-tri/thong-ke/thong-ke-khach.html ./thong_ke.php?key=thong-ke-khach
+RewriteRule ^quan-tri/thong-ke/thong-ke.html ./thong_ke.php?key=thong-ke
+RewriteRule ^quan-tri/thong-ke/trang-thai.html ./thong_ke.php?key=trang-thai
+RewriteRule ^quan-tri/don-hang/cap-nhat-don-hang/([0-9]+) ./thong_ke.php?key=cap-nhat&id=$1
+RewriteRule ^quan-tri/thong-ke/thanh-toan.html ./thong_ke.php?key=thanh-toan
+RewriteRule ^quan-tri/thong-ke/so-don-dat-hang.html ./thong_ke.php?key=don-hang-moi
+RewriteRule ^quan-tri/tin-tuc/danh-sach-tin-tuc.html ./tin_tuc.php?key=ds-tin-tuc
+RewriteRule ^quan-tri/tin-tuc/them-tin-tuc.html ./tin_tuc.php?key=them-tin-tuc
+RewriteRule ^quan-tri/tin-tuc/xoa-tin-tuc/([0-9_-]+) ./tin_tuc.php?key=xoa-tin-tuc&id=$1
+RewriteRule ^quan-tri/tin-tuc/cap-nhat-tin-tuc/([0-9_-]+) ./tin_tuc.php?key=cap-nhat-tin-tuc&id=$1
+RewriteRule ^quan-tri/lien-he/tin-nhan-khach-hang.html ./dich_vu.php?key=tin-nhan-khach-hang
+RewriteRule ^about.html ./dich_vu.php?key=about
+RewriteRule ^dich-vu.html ./dich_vu.php?key=dich-vu
+RewriteRule ^lien-he.html ./dich_vu.php?key=lien-he
