@@ -271,6 +271,105 @@ class C_san_pham
 		$smarty->assign('data',$dataND);
 		$smarty->display('san_pham/v_cap_nhat_hang_xe.tpl');
 	}
+	public function KiemTraDuLieu($data)
+	{
+		$ketqua='';
+		if(empty($data['idhang_xe']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(empty($data['ten_xe']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(empty($data['ten_xe_url']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(empty($data['noi_dung_tom_tat']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(empty($data['noi_dung_chi_tiet']))
+		{
+			$ketqua='Phải nhập dữ liệu cho các filed có (*)';
+			return $ketqua;
+		}
+		if(!is_numeric($data['don_gia']))
+		{
+			$ketqua='Đơn giá phải nhập số';
+			return $ketqua;
+		}
+		if(!is_numeric($data['gia_khuyen_mai']))
+		{
+			$ketqua='Đơn giá KM phải nhập số';
+			return $ketqua;
+		}
+	}
+	public function SanPhamBanChay()
+	{
+		$smarty=new Smarty_ung_dung();
+		$m_san_pham=new M_san_pham();
+		$DSSanPhamBanChay=$m_san_pham->SanPhamBanChay();
+		if($DSSanPhamBanChay)
+		{
+			$smarty->assign('DSSanPhamBanChay',$DSSanPhamBanChay);
+		}
+		$smarty->display('san_pham/v_san_pham_ban_chay.tpl');
+	}
+	public function XoaSanPham()
+	{
+		$maSP=$_GET['id'];
+		$m_san_pham= new M_san_pham();
+		$m_san_pham->XoaSanPham($maSP);
+		header('location:'.path.'quan-tri/san-pham/danh-sach-san-pham.html');
+	}
+	public function CapNhatSanPham()
+	{
+		$idxe=$_GET['id'];
+		$smarty=new Smarty_ung_dung();
+		$m_san_pham= new M_san_pham();
+		$data=$m_san_pham->getSanPham($idxe);
+		$dataSanPham=array(
+			'idxe'=>$data['idxe'], 'idhang_xe'=>$data['idhang_xe'], 'ten_xe'=>$data['ten_xe'], 'ten_xe_url'=>$data['ten_xe_url'], 'noi_dung_tom_tat'=>$data['noi_dung_tom_tat'], 'noi_dung_chi_tiet'=>$data['noi_dung_chi_tiet'], 'don_gia'=>$data['don_gia'], 'gia_khuyen_mai'=>$data['gia_khuyen_mai'], 'khuyen_mai'=>$data['khuyen_mai'], 'hinh'=>$data['hinh'], 'ngay_cap_nhat'=>$data['ngay_cap_nhat'], 'dvt'=>$data['dvt'], 'video'=>$data['video'], 'status'=> $data['status']
+		);
+		if(isset($_POST['btnCapNhat']))
+		{
+			$dataSanPham=array(
+				'idxe'=>$data['idxe'], 
+				'idhang_xe'=>$_POST['idhang_xe'], 
+				'ten_xe'=>$_POST['ten_xe'], 
+				'ten_xe_url'=>$_POST['ten_xe_url'], 
+				'noi_dung_tom_tat'=>$_POST['noi_dung_tom_tat'], 
+				'noi_dung_chi_tiet'=>$_POST['noi_dung_chi_tiet'], 
+				'don_gia'=>$_POST['don_gia'], 
+				'gia_khuyen_mai'=>$_POST['gia_khuyen_mai'], 
+				'khuyen_mai'=>$_POST['khuyen_mai'], 
+				'hinh'=>$data['idxe'], 
+				'ngay_cap_nhat'=>$data['ngay_cap_nhat'], 
+				'dvt'=>$_POST['dvt'],
+				'video'=>$data['video'],
+				'status'=>isset($_POST['status'])?1:0		);
+			$kiemtra=$this->KiemTraDuLieu($dataSanPham);
+			if(empty($kiemtra))
+			{
+				$m_san_pham=new M_san_pham();
+				$m_san_pham->CapNhatSanPham($dataSanPham);
+				header('location:'.path.'quan-tri/san-pham/danh-sach-san-pham.html');	
+			}
+			else
+				$smarty->assign('err',$kiemtra);
+
+		}
+		$m_loai_san_pham=new M_loai_san_pham();
+		$smarty->assign('DSLoaiSanPham',$m_loai_san_pham->DSLoaiSanPham());
+		$smarty->assign('data',$dataSanPham);
+		$smarty->display('san_pham/v_cap_nhat_san_pham.tpl');
+	}
 
 }
 ?>
